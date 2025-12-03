@@ -3,22 +3,25 @@
 <head>
   <meta charset="utf-8" />
   <title>College Feedback — Anonymous</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
   <style>
+    /* Disable scroll on mobile */
+    html, body {
+      height: 100%;
+      overflow: hidden;
+    }
+
     :root {
       --bg: #f3f4f6;
       --card-bg: #ffffff;
       --accent: #2563eb;
-      --accent-soft: rgba(37,99,235,0.08);
       --border: #e5e7eb;
       --text-main: #111827;
       --text-muted: #6b7280;
       --success: #16a34a;
       --danger: #dc2626;
-      --radius-xl: 18px;
-      --radius-full: 999px;
-      --shadow-soft: 0 18px 45px rgba(15,23,42,0.12);
+      --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
     }
 
     * {
@@ -29,13 +32,11 @@
     }
 
     body {
-      min-height: 100vh;
+      background: #f8faff;
       display: flex;
       align-items: center;
       justify-content: center;
       padding: 16px;
-      background: radial-gradient(circle at top, #e5edff 0, #f3f4f6 40%, #e5e7eb 100%);
-      color: var(--text-main);
     }
 
     .app-wrapper {
@@ -45,28 +46,16 @@
 
     .card {
       background: var(--card-bg);
-      border-radius: 24px;
+      border-radius: 22px;
       border: 1px solid var(--border);
       box-shadow: var(--shadow-soft);
       padding: 20px 18px 18px;
       position: relative;
+      height: calc(100vh - 40px);
       overflow: hidden;
-    }
-
-    .card::before {
-      content: "";
-      position: absolute;
-      inset: -40%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(59,130,246,0.10), transparent 55%),
-        radial-gradient(circle at 100% 0%, rgba(191,219,254,0.35), transparent 55%);
-      opacity: 0.7;
-      pointer-events: none;
-    }
-
-    .card-inner {
-      position: relative;
-      z-index: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
     }
 
     .badge {
@@ -75,25 +64,16 @@
       gap: 6px;
       padding: 4px 10px;
       border-radius: 999px;
-      background: #f9fafb;
+      background: #f3f4f6;
       border: 1px solid #e5e7eb;
       font-size: 11px;
       color: var(--text-muted);
       margin-bottom: 12px;
     }
 
-    .badge-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 999px;
-      background: #22c55e;
-      box-shadow: 0 0 0 4px rgba(34,197,94,0.18);
-    }
-
     .title-block h1 {
       font-size: 20px;
       font-weight: 600;
-      letter-spacing: 0.01em;
       color: #0f172a;
     }
 
@@ -104,49 +84,25 @@
     }
 
     .divider {
-      margin: 16px 0 14px;
+      margin: 14px 0;
       border-bottom: 1px solid #e5e7eb;
-    }
-
-    .field-label {
-      display: flex;
-      justify-content: space-between;
-      align-items: baseline;
-      margin-bottom: 4px;
-      font-size: 12px;
-      color: var(--text-muted);
-    }
-
-    .field-label span.main {
-      text-transform: uppercase;
-      letter-spacing: 0.07em;
-      font-weight: 500;
-      font-size: 11px;
-      color: #4b5563;
     }
 
     .textarea {
       width: 100%;
-      min-height: 120px;
+      height: 150px;
       padding: 10px 12px;
       border-radius: 14px;
       border: 1px solid #d1d5db;
       background: #f9fafb;
-      color: var(--text-main);
       font-size: 13px;
-      resize: vertical;
+      color: #111;
+      resize: none;
       outline: none;
-      transition: border-color 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
-    }
-
-    .textarea::placeholder {
-      color: #9ca3af;
-      font-size: 13px;
     }
 
     .textarea:focus {
       border-color: var(--accent);
-      box-shadow: 0 0 0 1px rgba(37,99,235,0.35);
       background: #ffffff;
     }
 
@@ -155,7 +111,6 @@
       align-items: center;
       justify-content: space-between;
       gap: 10px;
-      margin-top: 14px;
     }
 
     .hint {
@@ -164,63 +119,27 @@
       max-width: 60%;
     }
 
-    .hint span {
-      color: #4b5563;
-      font-weight: 500;
-    }
-
     .btn-primary {
       border: none;
-      outline: none;
       cursor: pointer;
       padding: 10px 18px;
-      border-radius: var(--radius-full);
+      border-radius: 999px;
       font-size: 13px;
       font-weight: 500;
-      letter-spacing: 0.02em;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 6px;
       background: linear-gradient(135deg, #60a5fa, #2563eb);
-      color: #f9fafb;
-      box-shadow: 0 10px 20px rgba(37,99,235,0.35);
-      min-width: 120px;
+      color: #fff;
+      box-shadow: 0 10px 20px rgba(37, 99, 235, 0.35);
     }
 
-    .btn-primary:active {
-      transform: translateY(1px);
-      box-shadow: 0 6px 12px rgba(37,99,235,0.45);
-    }
-
-    .btn-primary span.icon {
-      font-size: 14px;
-      transform: translateY(1px);
-    }
-
-    .status {
-      margin-top: 10px;
-      font-size: 11px;
-      min-height: 15px;
-    }
-
-    .status.error {
-      color: var(--danger);
-    }
-
-    .status.muted {
-      color: var(--text-muted);
-    }
-
-    /* Popup styles */
+    /* Popup */
     .popup-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(15,23,42,0.35);
+      background: rgba(0, 0, 0, 0.45);
       display: none;
       align-items: center;
       justify-content: center;
-      z-index: 50;
+      z-index: 100;
       padding: 16px;
     }
 
@@ -230,281 +149,138 @@
 
     .popup {
       width: 100%;
-      max-width: 380px;
+      max-width: 360px;
       background: #ffffff;
-      border-radius: 20px;
-      box-shadow: 0 24px 60px rgba(15,23,42,0.35);
-      padding: 18px 18px 16px;
-      position: relative;
-      overflow: hidden;
-      transform: translateY(18px) scale(0.96);
+      border-radius: 18px;
+      padding: 22px;
+      text-align: center;
+      transform: translateY(20px);
       opacity: 0;
-      transition: opacity 0.18s ease-out, transform 0.18s ease-out;
+      transition: 0.2s ease-out;
     }
 
     .popup.active {
       opacity: 1;
-      transform: translateY(0) scale(1);
-    }
-
-    .popup::before {
-      content: "";
-      position: absolute;
-      inset: -30%;
-      background:
-        radial-gradient(circle at 0% 0%, rgba(59,130,246,0.22), transparent 55%),
-        radial-gradient(circle at 100% 0%, rgba(56,189,248,0.28), transparent 55%);
-      opacity: 0.9;
-      pointer-events: none;
-    }
-
-    .popup-inner {
-      position: relative;
-      z-index: 1;
-    }
-
-    .popup-icon-wrap {
-      width: 40px;
-      height: 40px;
-      border-radius: 999px;
-      background: rgba(15,23,42,0.88);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      box-shadow: 0 12px 22px rgba(15,23,42,0.8);
-      margin-bottom: 10px;
+      transform: translateY(0);
     }
 
     .popup-check {
-      width: 18px;
-      height: 18px;
-      border-radius: 999px;
-      background: #22c55e;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-size: 12px;
-      color: #022c22;
-      font-weight: 700;
+      font-size: 36px;
+      color: #16a34a;
+      margin-bottom: 12px;
     }
 
     .popup-title {
-      font-size: 18px;
+      font-size: 20px;
       font-weight: 600;
       color: #0f172a;
-      margin-bottom: 4px;
+      margin-bottom: 8px;
     }
 
     .popup-text {
-      font-size: 13px;
-      color: #e5e7eb;
-      opacity: 0.92;
-    }
-
-    .popup-text span {
-      color: #bfdbfe;
-      font-weight: 500;
-    }
-
-    .popup-footer {
-      margin-top: 14px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 10px;
-      font-size: 11px;
-      color: #cbd5f5;
-    }
-
-    .popup-footer span {
-      opacity: 0.9;
+      font-size: 14px;
+      color: #374151; /* darker, fully visible */
+      line-height: 1.5;
     }
 
     .popup-btn {
+      margin-top: 16px;
+      background: #2563eb;
+      color: #fff;
       border: none;
-      outline: none;
+      padding: 10px 16px;
+      border-radius: 12px;
       cursor: pointer;
-      padding: 7px 14px;
-      border-radius: 999px;
-      font-size: 12px;
-      font-weight: 500;
-      background: #e5f0ff;
-      color: #1d4ed8;
-      display: inline-flex;
-      align-items: center;
-      gap: 4px;
-    }
-
-    .popup-btn span.icon {
-      font-size: 13px;
-      transform: translateY(1px);
-    }
-
-    @media (max-width: 480px) {
-      .card {
-        padding: 18px 14px 14px;
-        border-radius: 20px;
-      }
-      .title-block h1 {
-        font-size: 18px;
-      }
-      .footer-row {
-        flex-direction: column;
-        align-items: stretch;
-      }
-      .hint {
-        max-width: 100%;
-      }
-      .btn-primary {
-        width: 100%;
-        justify-content: center;
-      }
+      font-size: 14px;
+      box-shadow: 0 6px 14px rgba(37, 99, 235, 0.35);
     }
   </style>
 </head>
 <body>
   <div class="app-wrapper">
     <div class="card">
-      <div class="card-inner">
-        <div class="badge">
-          <span class="badge-dot"></span>
-          Anonymous College Feedback
-        </div>
+
+      <div>
+        <div class="badge">Anonymous College Feedback</div>
 
         <div class="title-block">
           <h1>Share your message</h1>
-          <p>
-            Complaints, suggestions, ideas — everything is anonymous.
-            Just be clear and respectful.
-          </p>
+          <p>Complaints, suggestions — everything is fully anonymous.</p>
         </div>
 
         <div class="divider"></div>
 
         <form id="feedbackForm">
-          <div class="field">
-            <div class="field-label">
-              <span class="main">Message</span>
-              <span style="font-size:11px;">Required</span>
-            </div>
-            <textarea
-              id="message"
-              class="textarea"
-              name="message"
-              placeholder="Describe the issue or suggestion clearly. Include place, time, and any details that help the college understand and fix it."
-              required
-            ></textarea>
-          </div>
-
-          <div class="footer-row">
-            <div class="hint">
-              <span>Note:</span> We do not collect your name, roll number,
-              or login. Every message is stored anonymously.
-            </div>
-
-            <button type="submit" class="btn-primary">
-              <span>Submit</span>
-              <span class="icon">↗</span>
-            </button>
-          </div>
-
-          <div id="status" class="status muted"></div>
-        </form>
+          <textarea
+            id="message"
+            name="message"
+            class="textarea"
+            placeholder="Describe clearly. Include details that help us understand and fix the issue."
+            required
+          ></textarea>
       </div>
+
+      <div>
+        <div class="footer-row">
+          <div class="hint">We don’t collect any identity or login info.</div>
+          <button type="submit" class="btn-primary">Submit</button>
+        </div>
+      </div>
+
+      <div id="status" style="font-size: 11px; margin-top: 8px; color: #6b7280;"></div>
+
+      </form>
     </div>
   </div>
 
   <!-- Success Popup -->
   <div id="popupBackdrop" class="popup-backdrop">
     <div id="popup" class="popup">
-      <div class="popup-inner">
-        <div class="popup-icon-wrap">
-          <div class="popup-check">✓</div>
-        </div>
-        <div class="popup-title">Thank you!</div>
-        <div class="popup-text">
-          Your message has been submitted.<br />
-          <span>We look forward to improving our college to its best.</span>
-        </div>
-        <div class="popup-footer">
-          <span>Feedback saved securely & anonymously.</span>
-          <button id="popupClose" class="popup-btn">
-            <span>Close</span>
-            <span class="icon">✕</span>
-          </button>
-        </div>
+      <div class="popup-check">✓</div>
+      <div class="popup-title">Thank you!</div>
+      <div class="popup-text">
+        Your message has been submitted.<br>
+        We look forward to improving our college to its best.
       </div>
+      <button id="popupClose" class="popup-btn">Close</button>
     </div>
   </div>
 
   <script>
     const form = document.getElementById('feedbackForm');
-    const statusEl = document.getElementById('status');
     const popupBackdrop = document.getElementById('popupBackdrop');
     const popup = document.getElementById('popup');
-    const popupClose = document.getElementById('popupClose');
+    const closeBtn = document.getElementById('popupClose');
 
     function openPopup() {
       popupBackdrop.classList.add('active');
-      // allow animation
-      requestAnimationFrame(() => {
-        popup.classList.add('active');
-      });
+      requestAnimationFrame(() => popup.classList.add('active'));
     }
 
     function closePopup() {
       popup.classList.remove('active');
-      setTimeout(() => {
-        popupBackdrop.classList.remove('active');
-      }, 150);
+      setTimeout(() => popupBackdrop.classList.remove('active'), 150);
     }
 
-    popupBackdrop.addEventListener('click', (e) => {
-      if (e.target === popupBackdrop) {
-        closePopup();
-      }
-    });
-
-    popupClose.addEventListener('click', () => {
-      closePopup();
-    });
+    closeBtn.addEventListener('click', closePopup);
 
     form.addEventListener('submit', async (e) => {
       e.preventDefault();
-      statusEl.className = 'status muted';
-      statusEl.textContent = 'Sending...';
 
       const message = document.getElementById('message').value.trim();
-
-      if (!message || message.length < 5) {
-        statusEl.textContent = 'Please write a clear message (at least a few words).';
-        statusEl.className = 'status error';
-        return;
-      }
+      if (!message) return;
 
       const formData = new FormData();
       formData.append('message', message);
 
-      try {
-        const response = await fetch('https://getform.io/f/bolqgqqa', {
-          method: 'POST',
-          body: formData
-        });
+      await fetch("https://getform.io/f/bolqgqqa", {
+        method: "POST",
+        body: formData
+      });
 
-        if (!response.ok) {
-          throw new Error('Network response was not ok');
-        }
-
-        form.reset();
-        statusEl.textContent = '';
-        openPopup();
-      } catch (err) {
-        console.error(err);
-        statusEl.textContent = 'Something went wrong. Please try again.';
-        statusEl.className = 'status error';
-      }
+      form.reset();
+      openPopup();
     });
   </script>
 </body>
 </html>
-
