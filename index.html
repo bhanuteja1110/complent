@@ -2,25 +2,21 @@
 <html lang="en">
 <head>
   <meta charset="utf-8" />
-  <title>College Feedback</title>
+  <title>College Feedback — Anonymous</title>
   <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no" />
 
   <style>
-    /* Disable mobile scroll */
     html, body {
       height: 100%;
       overflow: hidden;
     }
 
     :root {
-      --bg: #f3f4f6;
       --card-bg: #ffffff;
-      --accent: #2563eb;
       --border: #e5e7eb;
       --text-main: #111827;
       --text-muted: #6b7280;
-      --success: #16a34a;
-      --danger: #dc2626;
+      --accent: #2563eb;
       --shadow-soft: 0 18px 45px rgba(15, 23, 42, 0.12);
     }
 
@@ -39,10 +35,7 @@
       padding: 16px;
     }
 
-    .app-wrapper {
-      width: 100%;
-      max-width: 460px;
-    }
+    .app-wrapper { width: 100%; max-width: 460px; }
 
     .card {
       background: var(--card-bg);
@@ -102,7 +95,6 @@
       background: #ffffff;
     }
 
-    /* Position hint + button closer to textarea */
     .footer-actions {
       margin-top: 10px;
       display: flex;
@@ -143,9 +135,7 @@
       padding: 16px;
     }
 
-    .popup-backdrop.active {
-      display: flex;
-    }
+    .popup-backdrop.active { display: flex; }
 
     .popup {
       width: 100%;
@@ -179,7 +169,7 @@
 
     .popup-text {
       font-size: 14px;
-      color: #374151; /* visible grey */
+      color: #374151;
       line-height: 1.5;
     }
 
@@ -199,13 +189,12 @@
 <body>
   <div class="app-wrapper">
     <div class="card">
-
       <div>
-        <div class="badge">BIET College Feedback</div>
+        <div class="badge">Anonymous College Feedback</div>
 
         <div class="title-block">
           <h1>Share your message</h1>
-          <p>Complaints or suggestions.</p>
+          <p>Complaints or suggestions — completely anonymous.</p>
         </div>
 
         <div class="divider"></div>
@@ -219,14 +208,12 @@
             required
           ></textarea>
 
-          <!-- BUTTON + text moved up -->
           <div class="footer-actions">
             <div class="hint">We don’t collect any identity or login info.</div>
             <button type="submit" class="btn-primary">Submit</button>
           </div>
         </form>
       </div>
-
     </div>
   </div>
 
@@ -243,11 +230,29 @@
     </div>
   </div>
 
+  <!-- Firebase (Compat CDN) -->
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/11.0.0/firebase-firestore-compat.js"></script>
+
   <script>
+    // 🔹 Replace with your own config from Firebase Console
+    const firebaseConfig = {
+      apiKey: "AIzaSyA0tHemLD6WOOjuKQ5cGfCe_VPvMQSgVVA",
+      authDomain: "college-feedback-590e1.firebaseapp.com",
+      projectId: "college-feedback-590e1",
+      storageBucket: "college-feedback-590e1.firebasestorage.app",
+      messagingSenderId: "511708349056",
+      appId: "1:511708349056:web:db1518f6609ab623c45c65",
+      measurementId: "G-9QJY1T6G6L"
+    };
+    firebase.initializeApp(firebaseConfig);
+    const db = firebase.firestore();
+
     const form = document.getElementById('feedbackForm');
     const popupBackdrop = document.getElementById('popupBackdrop');
     const popup = document.getElementById('popup');
     const closeBtn = document.getElementById('popupClose');
+    const submitBtn = form.querySelector('button[type="submit"]');
 
     function openPopup() {
       popupBackdrop.classList.add('active');
@@ -260,23 +265,36 @@
     }
 
     closeBtn.addEventListener('click', closePopup);
+    popupBackdrop.addEventListener('click', (e) => {
+      if (e.target === popupBackdrop) closePopup();
+    });
 
-    form.addEventListener('submit', async (e) => {
+    form.addEventListener('submit', (e) => {
       e.preventDefault();
 
       const msg = document.getElementById('message').value.trim();
       if (!msg) return;
 
-      const formData = new FormData();
-      formData.append('message', msg);
+      const data = {
+        message: msg,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      };
 
-      await fetch("https://getform.io/f/bolqgqqa", {
-        method: "POST",
-        body: formData
-      });
-
-      form.reset();
+      // UX: show popup instantly
+      submitBtn.disabled = true;
+      submitBtn.textContent = 'Submitting...';
       openPopup();
+      form.reset();
+
+      // Save in Firestore (background)
+      db.collection('feedback').add(data)
+        .catch(err => {
+          console.error('Error saving feedback:', err);
+        })
+        .finally(() => {
+          submitBtn.disabled = false;
+          submitBtn.textContent = 'Submit';
+        });
     });
   </script>
 </body>
